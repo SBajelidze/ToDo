@@ -1,31 +1,4 @@
 ﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        // Initially hide the "Show Completed" button
-        $('#showCompletedButton').show();
-
-        // Initially hide the "Hide Completed" button
-        $('#hideCompletedButton').hide();
-
-        // Initially hide elements with class "completed-todo"
-        $('.completed-todo').hide();
-
-        // Function to hide completed todos and toggle buttons
-        $('#hideCompletedButton').click(function () {
-            $('.completed-todo').hide(); // Use the appropriate class for completed todos rows
-            $(this).hide(); // Hide the "Hide Completed" button
-            $('#showCompletedButton').show(); // Show the "Show Completed" button
-        });
-
-        // Function to show completed todos and toggle buttons
-        $('#showCompletedButton').click(function () {
-            $('.completed-todo').show(); // Use the appropriate class for completed todos rows
-            $(this).hide(); // Hide the "Show Completed" button
-            $('#hideCompletedButton').show(); // Show the "Hide Completed" button
-        });
-    });
-</script>
-
 @model TodoList.Web.Models.TodoViewModel
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
@@ -104,13 +77,19 @@
 
 <button id="hideCompletedButton" class="btn btn-primary">Hide Completed</button>
 <button id="showCompletedButton" class="btn btn-secondary">Show Completed</button>
-<form class="completed-todo" asp-action="EmptyCompletedTodos" method="post">
-    <h2>@Localizer["Dones"]</h2>
+<div id="completed-todo-container">
+ <h2>@Localizer["Dones"]</h2>
     <table class="table">
         <thead>
             <tr>
                 <th>
+                    @Localizer["Update Status"]
+                </th>
+                <th>
                     @Localizer["Title"]
+                </th>
+                <th>
+                    @Localizer["Done"]
                 </th>
                 <th>
                     @Localizer["Dueto"]
@@ -126,7 +105,16 @@
             {
                 <tr>
                     <td>
+                        <form asp-action="UpdateDone" method="post">
+                            <input type="checkbox" class="done-checkbox" asp-for="@item.Done" />
+                            <input type="hidden" name="id" value="@item.Id" />
+                        </form>
+                    </td>
+                    <td>
                         @item.Title
+                    </td>
+                    <td>
+                        @(item.Done ? "Yes" : "No")
                     </td>
                     <td>
                         <span data-value="@item.DuetoDateTime" class="timeStampValue">
@@ -150,5 +138,39 @@
             }
         </tbody>
     </table>
-    <button type="submit" class="btn btn-danger">Empty Completed</button>
-</form>
+    <form id="emptyCompletedForm" asp-action="EmptyCompletedTodos" method="post">
+        <button id="emptyCompletedButton" class="btn btn-danger" type="button">Empty Completed</button>
+        <input type="hidden" name="someHiddenField" value="You can include additional hidden fields if needed" />
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        // Attach a click event handler to the "Empty Completed" button
+        $('#emptyCompletedButton').click(function () {
+            // Submit the form when the button is clicked
+            $('#emptyCompletedForm').submit();
+        });
+        // Initially hide the "Show Completed" button
+        $('#showCompletedButton').show();
+
+        // Initially hide the "Hide Completed" button
+        $('#hideCompletedButton').hide();
+
+        // Initially hide elements with class "completed-todo"
+        $('#completed-todo-container').hide();
+
+        // Function to hide completed todos and toggle buttons
+        $('#hideCompletedButton').click(function () {
+            $('#completed-todo-container').hide(); // Use the appropriate class for completed todos rows
+            $(this).hide(); // Hide the "Hide Completed" button
+            $('#showCompletedButton').show(); // Show the "Show Completed" button
+        });
+
+        // Function to show completed todos and toggle buttons
+        $('#showCompletedButton').click(function () {
+            $('#completed-todo-container').show(); // Use the appropriate class for completed todos rows
+            $(this).hide(); // Hide the "Show Completed" button
+            $('#hideCompletedButton').show(); // Show the "Hide Completed" button
+        });
+    });
+</script>
