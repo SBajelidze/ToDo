@@ -132,7 +132,7 @@ namespace TodoList.Core.Services
         {
             return await _context.Todos
                 .Where(t => t.UserId == user.Id && !t.Done
-                && DateTime.Compare(DateTime.UtcNow.AddDays(1), t.DueTo.ToDateTimeUtc()) >= 0)
+                && DateTime.Compare(DateTime.UtcNow.AddDays(2), t.DueTo.ToDateTimeUtc()) >= 0)
                 .ToArrayAsync();
         }
 

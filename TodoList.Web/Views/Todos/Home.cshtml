@@ -41,6 +41,9 @@
                     @Localizer["Added"]
                 </th>
                 <th>
+                    @Localizer["Due to"]
+                </th>
+                <th>
                     @Localizer["Tags"]
                 </th>
                 <th></th>
@@ -65,6 +68,11 @@
                     <td>
                         <span data-value="@item.Added" class="timeStampValueModernized">
                             @item.Added
+                        </span>
+                    </td>
+                    <td>
+                        <span data-value="@item.DuetoDateTime" class="timeStampValue">
+                            @item.DuetoDateTime
                         </span>
                     </td>
                     <td>
